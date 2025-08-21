@@ -38,7 +38,7 @@ export default function WelcomeScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Bem-vindo ao Código Civil App</Text>
-      <TouchableOpacity style={styles.button} onPress={() => router.push('/home')}>
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/dashboard')}>
         <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
     </View>
