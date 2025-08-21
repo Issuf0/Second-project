@@ -1,94 +1,89 @@
-import { useState, useEffect } from 'react';
-import { View, Text, TextInput, FlatList, StyleSheet, SafeAreaView } from 'react-native';
-import { civilCode } from '../data/civilCode';
+import React, { useState, useEffect } from 'react';
+import { Text, StyleSheet, TouchableOpacity, Image, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import * as Animatable from 'react-native-animatable';
 
-export default function Index() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredData, setFilteredData] = useState(civilCode);
+export default function WelcomeScreen() {
+  const [showSplash, setShowSplash] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    if (searchTerm.trim() === '') {
-      setFilteredData(civilCode);
-    } else {
-      const filtered = civilCode.filter(item =>
-        item.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.text.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredData(filtered);
-    }
-  }, [searchTerm]);
+    setTimeout(() => {
+      setShowSplash(false);
+    }, 4000); // 4 seconds
+  }, []);
 
-  const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
-      <Text style={styles.itemNumber}>{item.number}</Text>
-      <Text style={styles.itemText}>{item.text}</Text>
-    </View>
-  );
+  if (showSplash) {
+    return (
+      <View style={styles.splashContainer}>
+        <Animatable.Image
+          animation="zoomIn"
+          duration={2000}
+          iterationCount={1}
+          source={require('../../assets/images/marca.jpg')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+        <Animatable.Text
+          animation="fadeInUp"
+          duration={2000}
+          style={styles.splashText}
+        >
+          Learn Code
+        </Animatable.Text>
+      </View>
+    );
+  }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Código Civil</Text>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Pesquisar por artigo ou termo..."
-          value={searchTerm}
-          onChangeText={setSearchTerm}
-        />
-      </View>
-      <FlatList
-        data={filteredData}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        contentContainerStyle={styles.list}
-      />
-    </SafeAreaView>
+    <View style={styles.container}>
+      <Text style={styles.title}>Bem-vindo ao Código Civil App</Text>
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/home')}>
+        <Text style={styles.buttonText}>Entrar</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  splashContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5F5DC',
+  },
+  logo: {
+    width: 200,
+    height: 200,
+  },
+  splashText: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#36454F',
+    marginTop: 20,
+  },
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  header: {
-    padding: 16,
-    backgroundColor: 'white',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5F5DC',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 32,
     textAlign: 'center',
+    color: '#36454F',
   },
-  searchInput: {
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#ccc',
+  button: {
+    backgroundColor: '#D4AF37',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
     borderRadius: 8,
-    paddingHorizontal: 10,
-    backgroundColor: 'white',
   },
-  list: {
-    paddingHorizontal: 16,
-  },
-  itemContainer: {
-    backgroundColor: 'white',
-    padding: 16,
-    marginVertical: 8,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#eee',
-  },
-  itemNumber: {
-    fontSize: 16,
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  itemText: {
-    fontSize: 14,
-    lineHeight: 20,
   },
 });
